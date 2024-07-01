@@ -7,11 +7,13 @@ import { Dashboard } from './pages/Dashboard'
 import { Startingpage } from './pages/StartingPage'
 // import './App.css'
 
+
 function App() {
   
 
   return (
   <>
+  
     <BrowserRouter>
     <Routes> 
       <Route path='/' element={<Startingpage/>}></Route>
@@ -21,6 +23,7 @@ function App() {
       <Route path='/send' element={<SendMoney/>}/>
     </Routes>
     </BrowserRouter>
+    
     </>
   
   )
