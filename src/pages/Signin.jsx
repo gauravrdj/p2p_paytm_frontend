@@ -8,12 +8,18 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
 import {toast} from 'sonner'
+import TypewriterSpinner from "../components/Loader"
 
 export const Signin = () => {
   const [username, setUsername]=useState("");
   const [password, setPassword]=useState("");
+  const [loading, setLoading] = useState(false)
   const navigate=useNavigate();
-      
+      if(loading){
+        return (
+           <TypewriterSpinner></TypewriterSpinner>
+        )
+      }
     return <div className="bg-slate-300 h-screen flex justify-center">
     <div className="flex flex-col justify-center">
       <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
@@ -29,6 +35,7 @@ export const Signin = () => {
           <Button onClick={async()=>{
                 try{
                   console.log(username, password);
+                  setLoading(true);
                     const response=await axios.post('https://p2p-paytm.onrender.com/api/v1/user/signin', {
                        username:username,
                        password: password,
@@ -38,11 +45,14 @@ export const Signin = () => {
                       //change
                       localStorage.setItem("firstName", response.data.firstName);
                        localStorage.setItem("username", response.data.username);
+
                       navigate('/dashboard');
+                        setLoading(false);
                       // console.log(response.data);
                 }
                 catch(e){
                   // alert(e.response.data.msg);
+                  setLoading(false);
                   toast.info(`${e.response.data.msg}`)
             Swal.fire({
               title: "SignIn",

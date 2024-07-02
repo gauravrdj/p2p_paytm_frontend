@@ -4,11 +4,13 @@ import axios from "axios"
 import { useState } from "react";
 import Swal from 'sweetalert2'
 import {toast} from 'sonner'
+import { Button } from "@material-tailwind/react";
 
 export const SendMoney = () => {
     const navigate=useNavigate();
     const [amount, setAmount] =useState(0);
     const [searchParams]=useSearchParams();
+    const [loading, setLoading] =useState(false);
    const id=searchParams.get("userId");
    const name=searchParams.get("firstName");
     return <div class="flex justify-center h-screen bg-gray-100">
@@ -43,9 +45,9 @@ export const SendMoney = () => {
                         placeholder="Enter amount"
                     />
                     </div>
-                    <button onClick={async()=>{
+                    {loading===false ? <button onClick={async()=>{
                         try{
-
+                            setLoading(true);
                         
                        const response= await axios.post('https://p2p-paytm.onrender.com/api/v1/account/transfer', {
                             to: id,
@@ -63,11 +65,13 @@ export const SendMoney = () => {
                                text : `${response.data.msg}`,
                                 icon : 'success'
                                })
+                               setLoading(false);
                          navigate('/dashboard');
                     }
                     catch(e){
                         // console.log(e);
                         // alert(e.response.data.msg);
+                        setLoading(false);
                         toast.info(`${e.response.data.msg}`)
                          Swal.fire({
                         title: "Transfer",
@@ -77,8 +81,8 @@ export const SendMoney = () => {
                         navigate('/dashboard');
                     }
                     }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-purple-500 text-white">
-                        Initiate Transfer
-                    </button>
+                        Pay Now
+                    </button> : <Button  variant="outlined" loading={true} className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-slate-500 text-white  cursor-wait"> Loading...</Button>}
                     <button onClick={()=>{
                         navigate('/dashboard');
                     }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-red-500 text-white">Cancel Transfer</button>

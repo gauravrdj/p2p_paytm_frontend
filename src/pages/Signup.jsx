@@ -8,6 +8,9 @@ import { SubHeading } from "../components/SubHeading"
 import { useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
 import {toast} from 'sonner'
+import TypewriterSpinner from "../components/Loader"
+
+
 
 export const Signup = () => {
   const navigate=useNavigate();
@@ -15,8 +18,12 @@ export const Signup = () => {
       const [lastName, setLastName] = useState("");
       const [password, setPassword] = useState("");
       const [username, setUsername] = useState("");
-
-
+      const [loading, setLoading] = useState("");
+if(loading){
+  return (
+    <TypewriterSpinner></TypewriterSpinner>
+  )
+}
     return <div className="bg-slate-300 h-screen flex justify-center">
     <div className="flex flex-col justify-center">
       <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
@@ -38,6 +45,7 @@ export const Signup = () => {
           <Button onClick={async ()=>{
             
             try{
+              setLoading(true);
           const response= await  axios.post("https://p2p-paytm.onrender.com/api/v1/user/signup", {
                username,
                password,
@@ -50,6 +58,7 @@ export const Signup = () => {
             localStorage.setItem("firstName", response.data.firstName);
             localStorage.setItem("username", response.data.username);
             //  alert(response.data.msg);
+            setLoading(false);
              toast.success(`${response.data.msg}`)
             Swal.fire({
               title: "SignUp",
@@ -60,6 +69,7 @@ export const Signup = () => {
           }
           catch(e){
             // alert(e.response.data.msg);
+            setLoading(false)
             toast.info(`${e.response.data.msg}`)
             Swal.fire({
               title: "SignUp",
